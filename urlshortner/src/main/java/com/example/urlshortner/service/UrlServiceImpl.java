@@ -1,12 +1,12 @@
 package com.example.urlshortner.service;
 
+import com.example.urlshortner.exception.InvalidUrlException;
 import com.example.urlshortner.model.Url;
 import com.example.urlshortner.repository.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static com.example.urlshortner.logic.GenerateShortUrlUtil.getShortUrl;
-import static com.example.urlshortner.logic.GenerateShortUrlUtil.isUrlValid;
 
 @Service
 public class UrlServiceImpl implements UrlServiceI{
@@ -15,20 +15,32 @@ public class UrlServiceImpl implements UrlServiceI{
 
 
     public String getOriginalUrl(String shortUrl) {
-        return urlRepository.findByShortUrl(shortUrl).getOriginalUrl();
+        Url urlFromDB = urlRepository.findByShortUrl(shortUrl);
+        if(urlFromDB == null){
+            return null;
+        }
+        return urlFromDB.getOriginalUrl();
     }
 
+    public Url generateShortUrl(String originalUrl) throws InvalidUrlException {
 
-    public Url generateShortUrl(String url) {
-        if(! isUrlValid(url)) {
-            System.out.println("URL is not valid");
-            return null;
+        // check if original url already exists
+        Url urlFromDB = urlRepository.findByOriginalUrl(originalUrl);
+        if(urlFromDB!=null){
+            return urlFromDB;
         }
 
         Url urlObject = new Url();
-        urlObject.setOriginalUrl(url);
-        urlObject.setShortUrl(getShortUrl(url));
+        urlObject.setOriginalUrl(originalUrl);
 
+        String shortUrl = getShortUrl(originalUrl);
+        // check for collisions
+        while (urlRepository.findByShortUrl(shortUrl) != null){
+            String saltedUrl = originalUrl + System.nanoTime();
+            shortUrl = getShortUrl(saltedUrl);
+        }
+
+        urlObject.setShortUrl(shortUrl);
         return urlRepository.save(urlObject);
     }
 }

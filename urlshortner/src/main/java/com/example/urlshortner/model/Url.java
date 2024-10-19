@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Url {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String shortUrl;
     private String originalUrl;
