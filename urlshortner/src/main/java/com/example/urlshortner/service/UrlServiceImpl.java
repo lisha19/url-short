@@ -5,8 +5,8 @@ import com.example.urlshortner.repository.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.example.urlshortner.logic.GenerateShortUrl.getShortUrl;
-import static com.example.urlshortner.logic.GenerateShortUrl.isUrlValid;
+import static com.example.urlshortner.logic.GenerateShortUrlUtil.getShortUrl;
+import static com.example.urlshortner.logic.GenerateShortUrlUtil.isUrlValid;
 
 @Service
 public class UrlServiceImpl implements UrlServiceI{

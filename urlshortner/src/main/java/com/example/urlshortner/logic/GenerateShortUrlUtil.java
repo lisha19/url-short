@@ -28,7 +28,7 @@ import org.apache.commons.validator.routines.UrlValidator;
 
 import java.nio.charset.Charset;
 
-public class GenerateShortUrl {
+public class GenerateShortUrlUtil {
 
     public static String getShortUrl(String url) {
 
