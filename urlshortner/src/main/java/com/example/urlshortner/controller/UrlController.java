@@ -2,13 +2,12 @@ package com.example.urlshortner.controller;
 
 
 import com.example.urlshortner.model.Url;
-import com.example.urlshortner.service.UrlService;
+import com.example.urlshortner.service.UrlServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.Map;
 
 @RestController
@@ -17,19 +16,30 @@ import java.util.Map;
 public class UrlController {
 
     @Autowired
-    private UrlService urlService;
+    private UrlServiceI urlService;
 
 
-@GetMapping("/{id}")
-public ResponseEntity<Void> redirect(@PathVariable String id) {
-    String originalUrl = urlService.getOriginlUrl(id); // Get the original URL from the service
-    if (originalUrl == null) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Not found
+//    @GetMapping("/{shortUrl}")
+//    public ResponseEntity<Void> redirect(@PathVariable String shortUrl) {
+//        String originalUrl = urlService.getOriginalUrl(shortUrl); // Get the original URL from the service
+//        if (originalUrl == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Not found
+//        }
+//        return ResponseEntity.status(HttpStatus.FOUND) // Use 302 for redirect
+//                .location(URI.create(originalUrl)) // Set the location header
+//                .build();
+//    }
+
+    @GetMapping("/{shortUrl}")
+    public ResponseEntity<String> redirect(@PathVariable String shortUrl) {
+        String originalUrl = urlService.getOriginalUrl(shortUrl); // Get the original URL from the service
+        if (originalUrl == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Not found
+        }
+
+        return ResponseEntity.status(HttpStatus.FOUND).body(originalUrl);
+
     }
-    return ResponseEntity.status(HttpStatus.FOUND) // Use 302 for redirect
-            .location(URI.create(originalUrl)) // Set the location header
-            .build();
-}
 
 
 

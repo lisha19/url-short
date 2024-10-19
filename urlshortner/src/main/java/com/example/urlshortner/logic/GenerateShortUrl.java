@@ -40,8 +40,7 @@ public class GenerateShortUrl {
         UrlValidator urlValidator = new UrlValidator(
                 new String[]{"http","https"}
         );
-        boolean result = urlValidator.isValid(url);
-        return result;
+        return urlValidator.isValid(url);
     }
 
 }
