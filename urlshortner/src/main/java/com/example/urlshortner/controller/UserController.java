@@ -1,6 +1,7 @@
 package com.example.urlshortner.controller;
 
 import com.example.urlshortner.dto.UserRequestDTO;
+import com.example.urlshortner.exception.UserAlreadyRegisteredException;
 import com.example.urlshortner.model.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/addOrUpdate")
-    public ResponseEntity<User> addOrUpdateUser(@RequestBody @Valid UserRequestDTO userRequestDTO) {
+    public ResponseEntity<User> addOrUpdateUser(@RequestBody @Valid UserRequestDTO userRequestDTO) throws UserAlreadyRegisteredException {
         User user = userService.addOrUpdateUser(userRequestDTO);
 
         if(user != null){

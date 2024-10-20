@@ -2,6 +2,7 @@ package com.example.urlshortner.service;
 
 import com.example.urlshortner.configuration.PasswordEncoderConfig;
 import com.example.urlshortner.dto.UserRequestDTO;
+import com.example.urlshortner.exception.UserAlreadyRegisteredException;
 import com.example.urlshortner.model.User;
 import com.example.urlshortner.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,13 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(username);
     }
 
-    public User addOrUpdateUser(UserRequestDTO userRequestDTO) {
+    public User addOrUpdateUser(UserRequestDTO userRequestDTO) throws UserAlreadyRegisteredException {
+
+        User userFromDB = userRepository.findByEmail(userRequestDTO.getEmail());
+        if(userFromDB != null){
+            throw new UserAlreadyRegisteredException("This email is already registered");
+        }
+
         User user = userRequestDTO.toUser();
         user.setAuthorities(userAuthority);
         user.setPassword(passwordEncoderConfig.getEncoder().encode(userRequestDTO.getPassword()));

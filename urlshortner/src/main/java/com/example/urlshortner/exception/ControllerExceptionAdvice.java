@@ -17,6 +17,11 @@ public class ControllerExceptionAdvice {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = UserAlreadyRegisteredException.class)
+    public ResponseEntity<Object> handle(UserAlreadyRegisteredException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handle(MethodArgumentNotValidException e){
         return new ResponseEntity<>(e.getBindingResult().getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
@@ -24,14 +29,11 @@ public class ControllerExceptionAdvice {
 
     @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)
     public ResponseEntity<Object> handle(SQLIntegrityConstraintViolationException e){
-        if (e.getMessage().contains("UK")) { // Specific to Hibernate's unique key violation
-            return new ResponseEntity<>("Email already exists, please use a different one.", HttpStatus.BAD_REQUEST);
-        }
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     public ResponseEntity<Object> handle(HttpMessageNotReadableException e){
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Request body is missing or invalid. Please provide valid data.", HttpStatus.BAD_REQUEST);
     }
 }
