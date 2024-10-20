@@ -2,6 +2,7 @@ package com.example.urlshortner.controller;
 
 
 import com.example.urlshortner.exception.InvalidUrlException;
+import com.example.urlshortner.exception.ShortUrlNotExistsException;
 import com.example.urlshortner.model.Url;
 import com.example.urlshortner.service.UrlServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import java.util.Map;
 import static com.example.urlshortner.logic.GenerateShortUrlUtil.isUrlValid;
 
 @RestController
-@RequestMapping("url/shortner")
+@RequestMapping("url/shortener")
 @CrossOrigin(origins = "http://localhost:3000")
 public class UrlController {
 
@@ -23,18 +24,17 @@ public class UrlController {
 
 
     @GetMapping("/{shortUrl}")
-    public ResponseEntity<String> getOriginalUrl(@PathVariable String shortUrl) {
+    public ResponseEntity<String> getOriginalUrl(@PathVariable String shortUrl) throws ShortUrlNotExistsException {
         String originalUrl = urlService.getOriginalUrl(shortUrl); // Get the original URL from the service
         if (originalUrl == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Not found
         }
 
         return ResponseEntity.status(HttpStatus.FOUND).body(originalUrl);
-
     }
 
     @PostMapping
-    public ResponseEntity<Url> generateShortUrl(@RequestBody Map<String, String> body) throws InvalidUrlException {
+    public ResponseEntity<String> generateShortUrl(@RequestBody Map<String, String> body) throws InvalidUrlException {
         String originalUrl = body.get("url");
 
         if(! isUrlValid(originalUrl)) {
@@ -45,7 +45,8 @@ public class UrlController {
         if (generatedUrl == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(generatedUrl);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(generatedUrl.getShortUrl());
     }
 
 

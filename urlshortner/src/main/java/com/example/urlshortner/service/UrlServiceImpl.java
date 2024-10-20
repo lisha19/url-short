@@ -1,6 +1,7 @@
 package com.example.urlshortner.service;
 
 import com.example.urlshortner.exception.InvalidUrlException;
+import com.example.urlshortner.exception.ShortUrlNotExistsException;
 import com.example.urlshortner.model.Url;
 import com.example.urlshortner.repository.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +15,15 @@ public class UrlServiceImpl implements UrlServiceI{
     private UrlRepository urlRepository;
 
 
-    public String getOriginalUrl(String shortUrl) {
+    public String getOriginalUrl(String shortUrl) throws ShortUrlNotExistsException {
         Url urlFromDB = urlRepository.findByShortUrl(shortUrl);
         if(urlFromDB == null){
-            return null;
+            throw new ShortUrlNotExistsException("Given short url does not exist");
         }
         return urlFromDB.getOriginalUrl();
     }
 
-    public Url generateShortUrl(String originalUrl) throws InvalidUrlException {
+    public Url generateShortUrl(String originalUrl) {
 
         // check if original url already exists
         Url urlFromDB = urlRepository.findByOriginalUrl(originalUrl);

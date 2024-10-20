@@ -20,15 +20,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/addOrUpdate")
-    public ResponseEntity<User> addOrUpdateUser(@RequestBody @Valid UserRequestDTO userRequestDTO) throws UserAlreadyRegisteredException {
-        User user = userService.addOrUpdateUser(userRequestDTO);
+    @PostMapping("/add")
+    public ResponseEntity<String> addUser(@RequestBody @Valid UserRequestDTO userRequestDTO) throws UserAlreadyRegisteredException {
+        User user = userService.addUser(userRequestDTO);
 
-        if(user != null){
-            return ResponseEntity.ok(user);
-        }
-        else{
+        if(user == null){
             return ResponseEntity.badRequest().build();
         }
+
+        return ResponseEntity.ok("User created with username: " + user.getEmail());
     }
 }

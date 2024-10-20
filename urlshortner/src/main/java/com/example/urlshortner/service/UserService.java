@@ -30,7 +30,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(username);
     }
 
-    public User addOrUpdateUser(UserRequestDTO userRequestDTO) throws UserAlreadyRegisteredException {
+    public User addUser(UserRequestDTO userRequestDTO) throws UserAlreadyRegisteredException {
 
         User userFromDB = userRepository.findByEmail(userRequestDTO.getEmail());
         if(userFromDB != null){
