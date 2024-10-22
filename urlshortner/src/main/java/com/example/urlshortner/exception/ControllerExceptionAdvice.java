@@ -41,4 +41,9 @@ public class ControllerExceptionAdvice {
     public ResponseEntity<Object> handle(HttpMessageNotReadableException e){
         return new ResponseEntity<>("Request body is missing or invalid. Please provide valid data.", HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<Object> handle(Exception e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

@@ -1,6 +1,5 @@
 package com.example.urlshortner.service;
 
-import com.example.urlshortner.exception.InvalidUrlException;
 import com.example.urlshortner.exception.ShortUrlNotExistsException;
 import com.example.urlshortner.model.Url;
 import com.example.urlshortner.repository.UrlRepository;
